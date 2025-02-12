@@ -25,12 +25,16 @@ export default function handler(req: VercelRequest, res: VercelResponse) {
     const subject = `Message to me from: ${message.name}`;
     const html = `Name: ${message.name}\nTel:${message.telephone}\n${message.message}`;
 
-    resend.emails.send({
-      from,
-      to,
-      subject,
-      html,
-    });
+    resend.emails
+      .send({
+        from,
+        to,
+        subject,
+        html,
+      })
+      .then((emailRes) => {
+        res.status(200).json({ id: emailRes.data?.id });
+      });
   } catch (error) {
     console.error("Error sending message to Resend:", error);
     return res.status(500).json({ error: "Internal Server Error" });
